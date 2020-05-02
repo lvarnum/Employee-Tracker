@@ -222,6 +222,7 @@ function addEmployee() {
         });
     });
 }
+
 // ----- Add a new Department to the Database -----
 function addDepartment() {
     inquirer.prompt(
