@@ -132,22 +132,22 @@ function viewByRole() {
 
 function addEmployee() {
     var roles = [];
-    connection.query("SELECT title from role", (err, data) => {
+    connection.query("SELECT * from role", (err, data) => {
         if (err) throw err;
         for (var i = 0; i < data.length; i++) {
             roles.push({
                 name: data[i].title,
-                value: data[i].title
+                value: data[i].id
             });
         }
     });
     var employees = [];
-    connection.query("SELECT CONCAT(first_name, ' ', last_name) as employee from employee", (err, data) => {
+    connection.query("SELECT * from employee", (err, data) => {
         if (err) throw err;
         for (var i = 0; i < data.length; i++) {
             employees.push({
-                name: data[i].employee,
-                value: data[i].employee
+                name: data[i].first_name + ' ' + data[i].last_name,
+                value: data[i].id
             });
         }
         employees.push({
@@ -176,11 +176,31 @@ function addEmployee() {
             type: "list",
             choices: employees
         }
-
     ]).then(answers => {
         var first = answers.firstName;
         var last = answers.lastName;
-        
+        var role = answers.role;
+        var manager = answers.manager;
+        var query;
+        if (manager === "none") {
+            query = {
+                first_name: first,
+                last_name: last,
+                role_id: role
+            }
+        } else {
+            query = {
+                first_name: first,
+                last_name: last,
+                role_id: role,
+                manager_id: manager
+            }
+        }
+
+        connection.query("INSERT INTO employee SET ?", query, (err, res) => {
+            if (err) throw err;
+            start();
+        });
     });
 }
 
