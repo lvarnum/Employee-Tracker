@@ -76,6 +76,12 @@ function start() {
             viewByRole();
         } else if (actionPrompt.action === 'addEmployee') {
             addEmployee();
+        } else if (actionPrompt.action === 'addDepartment') {
+            addDepartment();
+        } else if (actionPrompt.action === 'addRole') {
+            addRole();
+        } else if (actionPrompt.action === 'updateEmployee') {
+            updateEmployee();
         }
         else {
             return;
@@ -104,8 +110,8 @@ function viewByDepartment() {
     connection.query(`
     SELECT department.id, department.name as 'department', CONCAT(employee.first_name, ' ', employee.last_name) as 'employee',role.title
     FROM department
-    INNER JOIN role ON role.department_id = department.id
-    INNER JOIN employee ON employee.role_id = role.id`,
+    LEFT JOIN role ON role.department_id = department.id
+    LEFT JOIN employee ON employee.role_id = role.id`,
         (err, data) => {
             console.log('\n');
             console.table(data);
@@ -120,8 +126,8 @@ function viewByRole() {
     SELECT role.id, role.title, role.salary, department.name as 'department', 
     CONCAT(employee.first_name, ' ', employee.last_name) as 'employee'
     FROM role
-    INNER JOIN department ON role.department_id = department.id
-    INNER JOIN employee on employee.role_id = role.id`,
+    LEFT JOIN department ON role.department_id = department.id
+    LEFT JOIN employee on employee.role_id = role.id`,
         (err, data) => {
             console.log('\n');
             console.table(data);
@@ -177,8 +183,8 @@ function addEmployee() {
             choices: employees
         }
     ]).then(answers => {
-        var first = answers.firstName;
-        var last = answers.lastName;
+        var first = answers.firstName.trim();
+        var last = answers.lastName.trim();
         var role = answers.role;
         var manager = answers.manager;
         var query;
@@ -202,6 +208,73 @@ function addEmployee() {
             start();
         });
     });
+}
+
+function addDepartment() {
+    inquirer.prompt(
+        {
+            message: "What is the name of the department? ",
+            name: "name"
+        }
+    ).then(answer => {
+        connection.query("INSERT INTO department SET ?",
+            {
+                name: answer.name.trim()
+            },
+            (err, res) => {
+                if (err) throw err;
+                start();
+            });
+    });
+}
+
+function addRole() {
+    var departments = [];
+    connection.query("SELECT * FROM department", (err, data) => {
+        if (err) throw err;
+        for (var i = 0; i < data.length; i++) {
+            departments.push(
+                {
+                    name: data[i].name,
+                    value: data[i].id
+                }
+            );
+        }
+    });
+    inquirer.prompt([
+        {
+            message: "What is the name of the role? ",
+            name: "title"
+        },
+        {
+            message: "Enter the salary for the role: ",
+            name: "salary"
+        },
+        {
+            message: "What department does the role belong to? ",
+            name: "department",
+            type: "list",
+            choices: departments
+        }
+    ]).then(answers => {
+        var title = answers.title.trim();
+        var salary = parseFloat(answers.salary.trim());
+        var id = answers.department;
+        connection.query("INSERT INTO role SET ?", 
+        {
+            title: title,
+            salary: salary,
+            department_id: id
+        },
+        (err, res) => {
+            if (err) throw err;
+            start();
+        });
+    });
+}
+
+function updateEmployee() {
+    
 }
 
 // ---------- Call Functions ----------
