@@ -217,13 +217,19 @@ function addEmployee() {
 
         connection.query("INSERT INTO employee SET ?", query, (err, res) => {
             if (err) throw err;
+<<<<<<< HEAD
             console.log("\n~ Employee Added ~\n");
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
             start();
         });
     });
 }
 
+<<<<<<< HEAD
 // ----- Add a new Department to the Database -----
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
 function addDepartment() {
     inquirer.prompt(
         {
@@ -237,13 +243,19 @@ function addDepartment() {
             },
             (err, res) => {
                 if (err) throw err;
+<<<<<<< HEAD
                 console.log("\n~ Department Added ~\n");
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
                 start();
             });
     });
 }
 
+<<<<<<< HEAD
 // ----- Add a new Role to the Database -----
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
 function addRole() {
     var departments = [];
     connection.query("SELECT * FROM department", (err, data) => {
@@ -284,13 +296,19 @@ function addRole() {
             },
             (err, res) => {
                 if (err) throw err;
+<<<<<<< HEAD
                 console.log("\n~ Role Added ~\n");
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
                 start();
             });
     });
 }
 
+<<<<<<< HEAD
 // ----- Update an Existing Employee's Role and Manager -----
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
 function updateEmployee() {
     var employees = [];
     connection.query("SELECT * FROM employee", (err, data) => {
@@ -359,13 +377,19 @@ function updateEmployee() {
         connection.query("UPDATE employee SET ? WHERE id ='" + answers.employee + "'", query,
         (err, res) => {
             if (err) throw err;
+<<<<<<< HEAD
             console.log("\n~ Employee Updated ~\n");
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
             start();
         });
     });
 }
 
+<<<<<<< HEAD
 // ----- Remove an Employee from the Database -----
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
 function removeEmployee() {
     connection.query("SELECT * FROM employee", (err, data) => {
         if (err) throw err;
@@ -384,7 +408,10 @@ function removeEmployee() {
         ).then(answer => {
             connection.query("DELETE FROM employee WHERE id = '" + answer.employee + "'", (err, res) => {
                 if (err) throw err;
+<<<<<<< HEAD
                 console.log("\n~ Employee Removed ~\n");
+=======
+>>>>>>> f55ff53f5b4116d519ee8e94d2b1c6dd1ca3aa78
                 start();
             })
         });
